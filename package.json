@@ -2,10 +2,14 @@
   "name": "slidev-temp",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@slidev/cli": "latest",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "async": "^3.2.6",
+    "express": "^4.21.1",
+    "p-queue": "^8.0.1",
     "vue": "latest"
   }
 }
