@@ -5,7 +5,7 @@ const { exec } = require("child_process");
 
 const app = express();
 const port = process.env.PORT || 3000;
-const sourceDir = path.join(__dirname, "slidev-files");
+const sourceDir = __dirname;
 
 app.use(express.json());
 
