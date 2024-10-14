@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@slidev/cli": "latest",
+    "express": "^4.18.2",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "vue": "latest"
