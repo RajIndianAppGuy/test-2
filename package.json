@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@slidev/cli": "latest",
+    "express": "^4.18.2",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "async": "^3.2.6",
