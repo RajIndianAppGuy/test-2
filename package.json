@@ -1,0 +1,11 @@
+{
+  "name": "slidev-temp",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@slidev/cli": "latest",
+    "@slidev/theme-default": "latest",
+    "@slidev/theme-seriph": "latest",
+    "vue": "latest"
+  }
+}
