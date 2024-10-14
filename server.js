@@ -7,6 +7,7 @@ import cluster from "cluster";
 import os from "os";
 import PQueue from "p-queue";
 import { fileURLToPath } from "url";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -15,15 +16,25 @@ const sourceDir = __dirname;
 
 app.use(express.json());
 
-// Create a queue with concurrency limit
-const concurrency = os.cpus().length; // Use number of CPU cores as concurrency limit
+// Increase concurrency limit
+const concurrency = os.cpus().length * 2; // Double the number of CPU cores
 const queue = new PQueue({ concurrency });
 const execPromise = util.promisify(exec);
+
+// Implement caching
+const buildCache = new Map();
+
 async function buildSlideshowSPA(filename, content) {
   const filePath = path.join(sourceDir, `${filename}.md`);
   const targetDir = path.join(sourceDir, filename);
 
   try {
+    // Check cache first
+    if (buildCache.has(filename) && buildCache.get(filename) === content) {
+      console.log(`Using cached build for ${filename}`);
+      return `Using cached build for ${filename}`;
+    }
+
     await fs.writeFile(filePath, content);
     console.log(`Markdown file ${filePath} created`);
 
@@ -34,6 +45,10 @@ async function buildSlideshowSPA(filename, content) {
 
     const { stdout, stderr } = await execPromise(command);
     console.log(`Successfully built SPA for ${filename}`);
+
+    // Update cache
+    buildCache.set(filename, content);
+
     return `Successfully built SPA for ${filename}`;
   } catch (err) {
     console.error(`Error processing build for ${filename}:`, err);
@@ -80,8 +95,8 @@ app.get("/", (req, res) => {
   res.send("Slidev SPA Builder is running!");
 });
 
-if (cluster.isMaster) {
-  console.log(`Master process is running on PID ${process.pid}`);
+if (cluster.isPrimary) {
+  console.log(`Primary process is running on PID ${process.pid}`);
 
   for (let i = 0; i < concurrency; i++) {
     cluster.fork();
